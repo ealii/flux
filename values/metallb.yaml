@@ -1,0 +1,3 @@
+fullnameOverride: metallb
+speaker:
+  tolerateMaster: false

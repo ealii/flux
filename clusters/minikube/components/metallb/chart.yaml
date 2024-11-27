@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmChart
+metadata:
+  name: metallb
+  namespace: flux-system
+spec:
+  chart: metallb
+  interval: 1m0s
+  reconcileStrategy: ChartVersion
+  sourceRef:
+    kind: HelmRepository
+    name: metallb
+  version: 0.14.x
