@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   chart: reflector
-  interval: 6h0m0s
+  interval: 1m0s
   reconcileStrategy: ChartVersion
   sourceRef:
     kind: HelmRepository
