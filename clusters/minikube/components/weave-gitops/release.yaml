@@ -12,5 +12,7 @@ spec:
   install:
     createNamespace: true
   interval: 1m0s
-  releaseName: podinfo-dev
+  releaseName: weave-gitops
   targetNamespace: weave-gitops
+  values:
+    fullnameOverride: weave-gitops
