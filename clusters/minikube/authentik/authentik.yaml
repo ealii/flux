@@ -26,8 +26,8 @@ spec:
   dependsOn:
   - name: redis
     namespace: flux-system
-  - name: system
-    namespace: flux
+  - name: postgresql
+    namespace: flux-system
   install:
     createNamespace: true
   interval: 1m0s
