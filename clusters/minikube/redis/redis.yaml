@@ -8,7 +8,7 @@ spec:
   interval: 1m0s
   provider: generic
   ref:
-    tag: 20.3.x
+    tag: 20.3.0
   url: oci://registry-1.docker.io/bitnamicharts/redis
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
