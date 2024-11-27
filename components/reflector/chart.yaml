@@ -2,12 +2,13 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmChart
 metadata:
-  name: weave-gitops
+  name: reflector
   namespace: flux-system
 spec:
-  chart: ./charts/gitops-server
+  chart: reflector
   interval: 6h0m0s
   reconcileStrategy: ChartVersion
   sourceRef:
-    kind: GitRepository
-    name: weave-gitops
+    kind: HelmRepository
+    name: emberstack
+  version: 7.1.x
