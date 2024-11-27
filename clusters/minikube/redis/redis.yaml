@@ -1,0 +1,53 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: redis
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  provider: generic
+  ref:
+    tag: 7.4.x
+  url: oci://registry-1.docker.io/bitnamicharts/redis
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: redis
+  namespace: flux-system
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: redis
+    namespace: flux-system
+  dependsOn:
+  - name: reflector
+    namespace: flux-system
+  install:
+    createNamespace: true
+  interval: 1m0s
+  releaseName: redis
+  targetNamespace: redis
+  values:
+    architecture: standalone
+    auth:
+      password: uW68K2FeygjEsVZr
+    fullnameOverride: redis
+    image:
+      tag: 7.4.1-debian-12-r2
+    master:
+      persistence:
+        size: 50Gi
+      resources:
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 0.2
+          memory: 256Mi
+    secretAnnotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: authentik
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: authentik

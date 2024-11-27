@@ -1,0 +1,27 @@
+fullnameOverride: redis
+
+secretAnnotations:
+  reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+  reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "authentik"
+  reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+  reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "authentik"
+
+image:
+  tag: 7.4.1-debian-12-r2
+
+architecture: standalone
+
+auth:
+  password: uW68K2FeygjEsVZr
+
+master:
+  resources:
+    requests:
+      cpu: 0.2
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+
+  persistence:
+    size: 50Gi
