@@ -1,0 +1,23 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: istio-ingressgateway
+  namespace: flux-system
+spec:
+  chartRef:
+    kind: HelmChart
+    name: gateway
+    namespace: flux-system
+  dependsOn:
+  - name: istiod
+    namespace: flux-system
+  install:
+    createNamespace: true
+  interval: 1m0s
+  releaseName: istio-ingressgateway
+  targetNamespace: istio-system
+  values:
+    service:
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: 192.168.59.150
