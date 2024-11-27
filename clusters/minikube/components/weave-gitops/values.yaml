@@ -1,1 +1,5 @@
 fullnameOverride: weave-gitops
+adminUser:
+  create: true
+  username: admin
+  passwordHash: $2a$10$vwMbErTlVkVAZvk5cTi2zuqG2AS1y3Xsv5okZGSleQaTIEK7gPiiy

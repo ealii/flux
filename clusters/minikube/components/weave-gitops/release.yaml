@@ -15,4 +15,8 @@ spec:
   releaseName: weave-gitops
   targetNamespace: weave-gitops
   values:
+    adminUser:
+      create: true
+      passwordHash: $2a$10$vwMbErTlVkVAZvk5cTi2zuqG2AS1y3Xsv5okZGSleQaTIEK7gPiiy
+      username: admin
     fullnameOverride: weave-gitops
