@@ -62,7 +62,7 @@ spec:
       - name: AUTHENTIK_POSTGRESQL__PASSWORD
         valueFrom:
           secretKeyRef:
-            key: postgres-password
+            key: password
             name: postgresql
       - name: AUTHENTIK_REDIS__DB
         value: "1"
@@ -94,7 +94,7 @@ spec:
       pdb:
         enabled: true
         minAvailable: 1
-      replicas: 3
+      replicas: 1
       resources:
         limits:
           memory: 1Gi

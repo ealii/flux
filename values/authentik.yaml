@@ -11,7 +11,7 @@ global:
     valueFrom:
       secretKeyRef:
         name: postgresql
-        key: postgres-password
+        key: password
   - name: AUTHENTIK_REDIS__DB
     value: "1"
   volumeMounts:
@@ -48,7 +48,7 @@ server:
       memory: 1Gi
 
 worker:
-  replicas: 3
+  replicas: 1
   pdb:
     enabled: true
     minAvailable: 1
