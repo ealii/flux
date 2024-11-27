@@ -37,8 +37,12 @@ spec:
     image:
       tag: 7.4.1-debian-12-r2
     master:
+      containerPorts:
+        tcp-redis: 6379
+      pdb:
+        minAvailable: 1
       persistence:
-        size: 50Gi
+        size: 10Gi
       resources:
         limits:
           cpu: 1
