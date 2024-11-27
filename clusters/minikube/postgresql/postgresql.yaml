@@ -73,3 +73,23 @@ spec:
       service:
         ports:
           tcp-postgresql: 5432
+  postRenderers:
+  - kustomize:
+      patches:
+      - target:
+          version: v1
+          kind: Secret
+          name: postgresql
+        patch: |
+          - op: add
+            path: /metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-allowed
+            value: "true"
+          - op: add
+            path: /metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-allowed-namespaces
+            value: authentik
+          - op: add
+            path: /metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-auto-enabled
+            value: "true"
+          - op: add
+            path: /metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-auto-namespaces
+            value: authentik
