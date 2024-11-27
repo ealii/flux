@@ -1,0 +1,103 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: goauthentik
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: https://charts.goauthentik.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: flux-system
+spec:
+  chart:
+    spec:
+      chart: authentik
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: goauthentik
+        namespace: flux-system
+      version: 2024.10.x
+  dependsOn:
+  - name: redis
+    namespace: flux-system
+  - name: system
+    namespace: flux
+  install:
+    createNamespace: true
+  interval: 1m0s
+  releaseName: authentik
+  targetNamespace: authentik
+  values:
+    additionalObjects:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: authentik-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+    authentik:
+      postgresql:
+        host: postgresql-primary.postgresql.svc.cluster.local
+      redis:
+        host: redis-master.redis.svc.cluster.local
+      secret_key: J7zVqLSavtnFUwGDHmPCx6eNZgf83hQEbYXKTB9Rr5u2MWAc
+    fullnameOverride: authentik
+    global:
+      env:
+      - name: AUTHENTIK_REDIS__PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: redis-password
+            name: redis
+      - name: AUTHENTIK_POSTGRESQL__PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: postgres-password
+            name: postgresql
+      - name: AUTHENTIK_REDIS__DB
+        value: "1"
+      volumeMounts:
+      - mountPath: /media
+        name: data
+        subPath: media
+      - mountPath: /templates
+        name: data
+        subPath: custom-templates
+      - mountPath: /certs
+        name: data
+        subPath: certs
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: authentik-data
+    server:
+      pdb:
+        enabled: true
+        minAvailable: 1
+      resources:
+        limits:
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 256Mi
+    worker:
+      pdb:
+        enabled: true
+        minAvailable: 1
+      replicas: 3
+      resources:
+        limits:
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 512Mi

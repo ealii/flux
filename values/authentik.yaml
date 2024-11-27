@@ -1,0 +1,72 @@
+fullnameOverride: authentik
+
+global:
+  env:
+  - name: AUTHENTIK_REDIS__PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: redis
+        key: redis-password
+  - name: AUTHENTIK_POSTGRESQL__PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgresql
+        key: postgres-password
+  - name: AUTHENTIK_REDIS__DB
+    value: "1"
+  volumeMounts:
+  - name: data
+    mountPath: /media
+    subPath: media
+  - name: data
+    mountPath: /templates
+    subPath: custom-templates
+  - name: data
+    mountPath: /certs
+    subPath: certs
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: authentik-data
+
+authentik:
+  secret_key: J7zVqLSavtnFUwGDHmPCx6eNZgf83hQEbYXKTB9Rr5u2MWAc
+  postgresql:
+    host: postgresql-primary.postgresql.svc.cluster.local
+  redis:
+    host: redis-master.redis.svc.cluster.local
+
+server:
+  pdb:
+    enabled: true
+    minAvailable: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+
+worker:
+  replicas: 3
+  pdb:
+    enabled: true
+    minAvailable: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 1Gi
+
+additionalObjects:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: authentik-data
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
