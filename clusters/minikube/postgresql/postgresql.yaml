@@ -1,0 +1,75 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: postgresql
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  provider: generic
+  ref:
+    tag: 16.2.2
+  url: oci://registry-1.docker.io/bitnamicharts/postgresql
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: postgresql
+  namespace: flux-system
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: postgresql
+    namespace: flux-system
+  dependsOn:
+  - name: reflector
+    namespace: flux-system
+  install:
+    createNamespace: true
+  interval: 1m0s
+  releaseName: postgresql
+  targetNamespace: postgresql
+  values:
+    architecture: replication
+    auth:
+      database: authentik
+      password: Tg9VcKU7dSaytvzM
+      postgresPassword: dZ4fs7JD8AMxXzqW
+      username: authentik
+    containerPorts:
+      tcp-postgresql: 5432
+    fullnameOverride: postgresql
+    image:
+      tag: 17.2.0-debian-12-r0
+    primary:
+      pdb:
+        create: true
+        minAvailable: 1
+      persistence:
+        size: 30Gi
+      resources:
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 0.3
+          memory: 512Mi
+      service:
+        ports:
+          tcp-postgresql: 5432
+    readReplicas:
+      pdb:
+        create: false
+      persistence:
+        size: 30Gi
+      replicaCount: 1
+      resources:
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 0.3
+          memory: 512Mi
+      service:
+        ports:
+          tcp-postgresql: 5432

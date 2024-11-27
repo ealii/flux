@@ -1,0 +1,49 @@
+fullnameOverride: postgresql
+
+image:
+  tag: 17.2.0-debian-12-r0
+
+auth:
+  postgresPassword: dZ4fs7JD8AMxXzqW
+  username: authentik
+  password: Tg9VcKU7dSaytvzM
+  database: authentik
+
+architecture: replication
+
+containerPorts:
+  tcp-postgresql: 5432
+
+primary:
+  resources:
+    requests:
+      cpu: 0.3
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  pdb:
+    create: true
+    minAvailable: 1
+  service:
+    ports:
+      tcp-postgresql: 5432
+  persistence:
+    size: 30Gi
+ 
+readReplicas:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 0.3
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  pdb:
+    create: false
+  service:
+    ports:
+      tcp-postgresql: 5432
+  persistence:
+    size: 30Gi
