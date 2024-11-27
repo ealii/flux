@@ -1,0 +1,13 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmChart
+metadata:
+  name: weave-gitops
+  namespace: flux-system
+spec:
+  chart: ./charts/gitops-server
+  interval: 1m0s
+  reconcileStrategy: ChartVersion
+  sourceRef:
+    kind: GitRepository
+    name: weave-gitops
